@@ -1,8 +1,9 @@
 # bookapp
 This application demonstrates usage of basic languages used for frontend development - css/boostrap/javascript
 
-Presentation I (week 4 / 12.03): Web Application Front-End & Application Functional Requirements (complete list of
-functionalities)
+## Presentation I (week 4 / 12.03): 
+
+Web Application Front-End & Application Functional Requirements (complete list of functionalities)
 
 # Functional Requirements:
 
