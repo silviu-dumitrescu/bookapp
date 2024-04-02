@@ -24,3 +24,13 @@ Web Application Front-End & Application Functional Requirements (complete list o
 2. Ensure easy navigation for users to explore books/genres or authors.
 3. Create a logo for the application and add it on Home page.
 4. Each view should have a different background picture
+
+
+## Presentation II (week 7 / 03.04): 
+
+- database design schema comprising at least 6 tables. The database schema/design can be created using any tool (e.g. MySQL Workbench). However, for an easy visualization it is recommended to export it as an image
+- implementation of the database in the web application using code-first approach
+- set up the connection between the web application and the database. Make sure the database is generated and the connection string is correctly defined
+- add a test MVC Controller with views, using Entity Framework for one of the models
+
+![diagram](assets/db_diagram.png)
