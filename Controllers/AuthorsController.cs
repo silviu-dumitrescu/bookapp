@@ -1,22 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mybookapp.Models;
+using mybookapp.Services.Interfaces;
 
 namespace mybookapp.Controllers
 {
     public class AuthorsController : Controller
     {
-        private readonly MyBookAppContext _context;
+        private readonly IAuthorService _authorService;
 
-        public AuthorsController(MyBookAppContext context)
+        public AuthorsController(IAuthorService authorService)
         {
-            _context = context;
+            _authorService = authorService;
         }
 
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Authors.ToListAsync());
+            return View(_authorService.GetAll());
         }
 
         // GET: Authors/Details/5
@@ -27,8 +28,7 @@ namespace mybookapp.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.AuthorId == id);
+            var author = _authorService.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -52,8 +52,7 @@ namespace mybookapp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(author);
-                await _context.SaveChangesAsync();
+                _authorService.Create(author);
                 return RedirectToAction(nameof(Index));
             }
             return View(author);
@@ -67,7 +66,7 @@ namespace mybookapp.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors.FindAsync(id);
+            var author = _authorService.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -91,8 +90,7 @@ namespace mybookapp.Controllers
             {
                 try
                 {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
+                    _authorService.Update(author);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,8 +116,7 @@ namespace mybookapp.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.AuthorId == id);
+            var author = _authorService.Get(id);
             if (author == null)
             {
                 return NotFound();
@@ -133,19 +130,18 @@ namespace mybookapp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = _authorService.Get(id);
             if (author != null)
             {
-                _context.Authors.Remove(author);
+                _authorService.Delete(author);
             }
-
-            await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 
         private bool AuthorExists(int id)
         {
-            return _context.Authors.Any(e => e.AuthorId == id);
+            return _authorService.Get(id) != null;
         }
     }
 }

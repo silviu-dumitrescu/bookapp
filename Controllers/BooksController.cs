@@ -58,7 +58,7 @@ namespace mybookapp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,Title,AuthorId,CategoryId,PublishDate,Description")] Book book)
+        public async Task<IActionResult> Create([Bind("BookId,Title,ImageUrl,AuthorId,CategoryId,PublishDate,Description")] Book book)
         {
             if (ModelState.IsValid)
             {
@@ -84,8 +84,11 @@ namespace mybookapp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "AuthorId", book.AuthorId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", book.CategoryId);
+            // ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "AuthorId", book.AuthorId);
+            // ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", book.CategoryId);
+
+            ViewData["AuthorId"] = new SelectList(_context.Authors, nameof(Author.AuthorId), nameof(Author.Name));
+            ViewData["CategoryId"] = new SelectList(_context.Categories, nameof(Category.CategoryId), nameof(Category.Name));
             return View(book);
         }
 
@@ -94,7 +97,7 @@ namespace mybookapp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,AuthorId,CategoryId,PublishDate,Description")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,ImageUrl,AuthorId,CategoryId,PublishDate,Description")] Book book)
         {
             if (id != book.BookId)
             {
@@ -164,6 +167,20 @@ namespace mybookapp.Controllers
         private bool BookExists(int id)
         {
             return _context.Books.Any(e => e.BookId == id);
+        }
+
+        public async Task<IActionResult> Search(string searchString)
+        {
+            var books = _context.Books.Include(x => x.Author).AsEnumerable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(b =>
+                    b.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                    b.Author.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return View(books.ToList());
         }
     }
 }
