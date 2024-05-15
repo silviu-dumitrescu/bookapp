@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.Reflection.Metadata;
 
 namespace mybookapp.Models
 {
-    public class MyBookAppContext : DbContext
+    public class MyBookAppContext : IdentityDbContext<IdentityUser>
     {
         public MyBookAppContext(DbContextOptions<MyBookAppContext> options)
         : base(options)

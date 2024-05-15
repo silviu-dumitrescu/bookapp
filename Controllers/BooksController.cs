@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using mybookapp.Models;
 
 namespace mybookapp.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class BooksController : Controller
     {
         private readonly MyBookAppContext _context;
@@ -169,6 +171,7 @@ namespace mybookapp.Controllers
             return _context.Books.Any(e => e.BookId == id);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Search(string searchString)
         {
             var books = _context.Books.Include(x => x.Author).AsEnumerable();

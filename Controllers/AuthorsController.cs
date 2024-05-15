@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mybookapp.Models;
 using mybookapp.Services.Interfaces;
 
 namespace mybookapp.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AuthorsController : Controller
     {
         private readonly IAuthorService _authorService;
